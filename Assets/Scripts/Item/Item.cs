@@ -1,15 +1,18 @@
-﻿using UnityEngine;
+﻿using System;
+using System.Collections;
+using UnityEngine;
 
 public class Item : MonoBehaviour
 {
-    
+
     [ItemCodeDescriptionAttribute]
     [SerializeField]
     private int _itemCode;
+    private float timeToLive = 60f;
 
     private SpriteRenderer spriteRenderer;
 
-    public int ItemCode { get { return _itemCode; } set { _itemCode = value;} }
+    public int ItemCode { get { return _itemCode; } set { _itemCode = value; } }
 
     private void Awake()
     {
@@ -22,10 +25,22 @@ public class Item : MonoBehaviour
         {
             Init(ItemCode);
         }
+        ItemDetails itemDetails = InventoryManager.Instance.GetItemDetails(ItemCode);
+        if (itemDetails.canBePickedUp)
+        {
+            StartCoroutine(StartCountDown());
+        }
+    }
+
+    private IEnumerator StartCountDown()
+    {
+        yield return new WaitForSeconds(timeToLive);
+
+        Destroy(gameObject);
     }
 
     public void Init(int itemCodeParam)
-    {   
+    {
         // default item code is 0, so as long as it's been set up.
         if (itemCodeParam != 0)
         {
@@ -33,7 +48,7 @@ public class Item : MonoBehaviour
 
             // Use the singleton monobehavious inventory manager class' instance method GetItemDetails to return all of the item details for the given item code
             ItemDetails itemDetails = InventoryManager.Instance.GetItemDetails(ItemCode);
-            
+
             // Make sure the sprite is set up correctly based on the item details sprite!
             spriteRenderer.sprite = itemDetails.itemSprite;
 

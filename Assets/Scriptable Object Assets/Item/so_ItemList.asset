@@ -62,7 +62,7 @@ MonoBehaviour:
     itemUseRadius: 0
     isStartingItem: 1
     canBePickedUp: 1
-    canBeDropped: 0
+    canBeDropped: 1
     canBeEaten: 0
     canBeCarried: 0
   - itemCode: 10004
@@ -75,7 +75,7 @@ MonoBehaviour:
     itemUseRadius: 0
     isStartingItem: 1
     canBePickedUp: 1
-    canBeDropped: 0
+    canBeDropped: 1
     canBeEaten: 0
     canBeCarried: 0
   - itemCode: 10005
@@ -87,7 +87,7 @@ MonoBehaviour:
     itemUseRadius: 0
     isStartingItem: 1
     canBePickedUp: 1
-    canBeDropped: 0
+    canBeDropped: 1
     canBeEaten: 0
     canBeCarried: 0
   - itemCode: 10006
@@ -174,7 +174,7 @@ MonoBehaviour:
     itemUseRadius: 0
     isStartingItem: 1
     canBePickedUp: 1
-    canBeDropped: 0
+    canBeDropped: 1
     canBeEaten: 0
     canBeCarried: 0
   - itemCode: 10013
@@ -186,7 +186,7 @@ MonoBehaviour:
     itemUseRadius: 0
     isStartingItem: 1
     canBePickedUp: 1
-    canBeDropped: 0
+    canBeDropped: 1
     canBeEaten: 0
     canBeCarried: 0
   - itemCode: 10014
@@ -234,7 +234,7 @@ MonoBehaviour:
     itemUseRadius: 1.5
     isStartingItem: 1
     canBePickedUp: 1
-    canBeDropped: 0
+    canBeDropped: 1
     canBeEaten: 0
     canBeCarried: 0
   - itemCode: 10018
@@ -302,6 +302,96 @@ MonoBehaviour:
     itemType: 9
     itemDescription: Table
     itemLongDescription: Wooden table for placing your food on
+    itemUseGridRadius: 0
+    itemUseRadius: 0
+    isStartingItem: 0
+    canBePickedUp: 0
+    canBeDropped: 0
+    canBeEaten: 0
+    canBeCarried: 0
+  - itemCode: 10030
+    itemSprite: {fileID: -1611693019923910846, guid: d241c496741a12d4290e12ba81dd6724,
+      type: 3}
+    itemType: 1
+    itemDescription: Canyon Oak Tree (Small)
+    itemLongDescription: At this stage, the crop is just beginning to sprout. It
+      is small and fragile, requiring careful attention and optimal growing conditions
+      to thrive.
+    itemUseGridRadius: 0
+    itemUseRadius: 0
+    isStartingItem: 0
+    canBePickedUp: 0
+    canBeDropped: 0
+    canBeEaten: 0
+    canBeCarried: 0
+  - itemCode: 10031
+    itemSprite: {fileID: 1388107105281676754, guid: d241c496741a12d4290e12ba81dd6724,
+      type: 3}
+    itemType: 1
+    itemDescription: Canyon Oak Tree (Medium)
+    itemLongDescription: The crop has grown significantly and is now in its medium
+      stage. It is stronger and more robust, but still requires regular care to continue
+      its development.
+    itemUseGridRadius: 0
+    itemUseRadius: 0
+    isStartingItem: 0
+    canBePickedUp: 0
+    canBeDropped: 0
+    canBeEaten: 0
+    canBeCarried: 0
+  - itemCode: 10032
+    itemSprite: {fileID: 6019493940114240039, guid: d241c496741a12d4290e12ba81dd6724,
+      type: 3}
+    itemType: 1
+    itemDescription: Canyon Oak Tree (Large)
+    itemLongDescription: The crop is now large and nearly mature. It has a sturdy
+      structure and is well on its way to full growth. This stage marks the final
+      push towards harvesting.
+    itemUseGridRadius: 0
+    itemUseRadius: 0
+    isStartingItem: 0
+    canBePickedUp: 0
+    canBeDropped: 0
+    canBeEaten: 0
+    canBeCarried: 0
+  - itemCode: 10033
+    itemSprite: {fileID: -6947715560310228016, guid: 5d22327a2a3d2a049a8a59a708d527fe,
+      type: 3}
+    itemType: 1
+    itemDescription: Blue Spruce Tree (Small)
+    itemLongDescription: At this stage, the crop is just beginning to sprout. It
+      is small and fragile, requiring careful attention and optimal growing conditions
+      to thrive.
+    itemUseGridRadius: 0
+    itemUseRadius: 0
+    isStartingItem: 0
+    canBePickedUp: 0
+    canBeDropped: 0
+    canBeEaten: 0
+    canBeCarried: 0
+  - itemCode: 10034
+    itemSprite: {fileID: 4303850705525679241, guid: 5d22327a2a3d2a049a8a59a708d527fe,
+      type: 3}
+    itemType: 1
+    itemDescription: Blue Spruce Tree (Medium)
+    itemLongDescription: The crop has grown significantly and is now in its medium
+      stage. It is stronger and more robust, but still requires regular care to continue
+      its development.
+    itemUseGridRadius: 0
+    itemUseRadius: 0
+    isStartingItem: 0
+    canBePickedUp: 0
+    canBeDropped: 0
+    canBeEaten: 0
+    canBeCarried: 0
+  - itemCode: 10035
+    itemSprite: {fileID: 9217379939570758284, guid: 5d22327a2a3d2a049a8a59a708d527fe,
+      type: 3}
+    itemType: 1
+    itemDescription: Blue Spruce Tree (Large)
+    itemLongDescription: The crop is now large and nearly mature. It has a sturdy
+      structure and is well on its way to full growth. This stage marks the final
+      push towards harvesting.
     itemUseGridRadius: 0
     itemUseRadius: 0
     isStartingItem: 0

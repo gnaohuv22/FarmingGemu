@@ -18,11 +18,11 @@ public class Crop : MonoBehaviour
 
     [HideInInspector]
     public Vector2Int cropGridPosition;
-    
-    
+
+
     // This method will determine if the player has used the correct number of harvest actions, and harvest the crop if so, if not the number of actions increases
     // by 1 and we can try again. Once harvested, we harvest it and play the crop harvested animation
-    public void ProcessToolAction(ItemDetails equippedItemDetails, bool isToolRight, bool isToolLeft, bool isToolDown, bool isToolUp )
+    public void ProcessToolAction(ItemDetails equippedItemDetails, bool isToolRight, bool isToolLeft, bool isToolDown, bool isToolUp)
     {
         // Get the grid property details for the crops grid position, quit out if they don't exist!
         GridPropertyDetails gridPropertyDetails = GridPropertiesManager.Instance.GetGridPropertyDetails(cropGridPosition.x, cropGridPosition.y);
@@ -105,7 +105,7 @@ public class Crop : MonoBehaviour
                 {
                     // Set the sprite in the cropHarvestedSpriteRenderer object to be the crops harvestedSprite
                     cropHarvestedSpriteRenderer.sprite = cropDetails.harvestedSprite;
-                }   
+                }
             }
 
             if (isUsingToolRight || isUsingToolUp)
@@ -144,7 +144,7 @@ public class Crop : MonoBehaviour
         {
             // load up all of the box colliders in the children game components
             Collider2D[] collider2Ds = GetComponentsInChildren<Collider2D>();
-            
+
             // Disable all of the found colliders
             foreach (Collider2D collider2D in collider2Ds)
             {
@@ -265,4 +265,6 @@ public class Crop : MonoBehaviour
         // Display the new transformed crop as set up in the gridPropertyDetails
         GridPropertiesManager.Instance.DisplayPlantedCrop(gridPropertyDetails);
     }
+
+
 }

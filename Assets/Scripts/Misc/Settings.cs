@@ -39,7 +39,7 @@ public static class Settings
     public static float pixelSize = 0.0625f; // To check if moving NPC's are within a pixels' distance from the target location
 
     // Inventory
-    public static int playerInitialInventoryCapacity = 12;
+    public static int playerInitialInventoryCapacity = 48;
     public static int playerMaximumInventoryCapacity = 48;
 
     // NPC animation parameters - hashed values for efficiency

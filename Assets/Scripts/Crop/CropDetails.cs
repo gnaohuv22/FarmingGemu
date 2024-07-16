@@ -24,9 +24,10 @@ public class CropDetails
 
     [ItemCodeDescription]
     public int[] harvestToolItemCode; // The array of item codes for the tools that can harvest the crop, or 0 array elements if no tool is required (for example - tree can be cut with axe, brass axe, gold axe)
-    public int[] requiredHarvestActions; // Number of harvest actions required to complete to harvest the crop, for the corresponding tool in the harvestToolItemCode array. (for example - axe takes 5 hits, brass 3, and gold 1)
+    public int[] minRequiredHarvestActions; // Number of harvest actions required to complete to harvest the crop, for the corresponding tool in the harvestToolItemCode array. (for example - axe takes 5 hits, brass 3, and gold 1)
+    public int[] maxRequiredHarvestActions;
 
-    [ItemCodeDescription] 
+    [ItemCodeDescription]
     public int[] cropProducedItemCode; // Array of item codes produced for the harvested crop (i.e. cut down tree drops wood, acord, sticks..)
     public int[] cropProducedMinQuantity; // Array of the minimum quantities produced for the harvested crop, in the same order as the cropProducedItemCode array
     public int[] cropProducedMaxQuantity; // If max quantity > min Quantity, then a random number of crops between the two are produced. If they are the same, it just produces that many
@@ -63,7 +64,7 @@ public class CropDetails
             {
                 // If one of the possible items matches the item we are questioning, return the corresponding element of requiredHarvestActions, that is the
                 // number of actions required to harvest
-                return requiredHarvestActions[i];
+                return Random.Range(minRequiredHarvestActions[i], maxRequiredHarvestActions[i] + 1);
             }
         }
         return -1;

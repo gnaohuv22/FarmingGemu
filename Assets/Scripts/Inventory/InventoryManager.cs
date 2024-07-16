@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Diagnostics;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 // This class subscribes to the ISaveable interface, which means we must include several methods for saving/loading data (here, we will save the players inventory)
 public class InventoryManager : SingletonMonobehaviour<InventoryManager>, ISaveable
@@ -84,7 +85,7 @@ public class InventoryManager : SingletonMonobehaviour<InventoryManager>, ISavea
 
 
     private void CreateInventoryLists()
-    {   
+    {
         // Array of inventory lists of length (number of inventory locations - equal to the enum.count). Currently only 2: player and chest
         inventoryLists = new List<InventoryItem>[(int)InventoryLocation.count];
 
@@ -124,7 +125,7 @@ public class InventoryManager : SingletonMonobehaviour<InventoryManager>, ISavea
     public void AddItem(InventoryLocation inventoryLocation, Item item, GameObject gameObjectToDelete)
     {
         List<InventoryItem> inventoryList = inventoryLists[(int)inventoryLocation]; // I added this and the next if statement so that we can't pickup items if we already have the current max allowed items (we can pick up if we currently have the item, and will be adding to the quantity)
-        if (inventoryListCapacityIntArray[(int)InventoryLocation.player] > inventoryList.Count || FindItemInInventory(inventoryLocation, item.ItemCode) != -1) 
+        if (inventoryListCapacityIntArray[(int)InventoryLocation.player] > inventoryList.Count || FindItemInInventory(inventoryLocation, item.ItemCode) != -1)
         {
             AddItem(inventoryLocation, item);
 
@@ -193,7 +194,7 @@ public class InventoryManager : SingletonMonobehaviour<InventoryManager>, ISavea
     {
         //InventoryItem type is a struct that stores the itemCode, and the quantity held
         InventoryItem inventoryItem = new InventoryItem();
-        
+
         // Fill the struct with the item code, and set it to 1 held, then add the struct to the end of the inventory list
         inventoryItem.itemCode = itemCode;
         inventoryItem.itemQuantity = 1;
@@ -211,7 +212,7 @@ public class InventoryManager : SingletonMonobehaviour<InventoryManager>, ISavea
     {
         //InventoryItem type is a struct that stores the itemCode, and the quantity held
         InventoryItem inventoryItem = new InventoryItem();
-        
+
         // Add 1 to the existing quantity of this item code at the given index
         int quantity = inventoryList[position].itemQuantity + 1;
 
@@ -339,7 +340,7 @@ public class InventoryManager : SingletonMonobehaviour<InventoryManager>, ISavea
             case ItemType.Breaking_tool:
                 itemTypeDescription = Settings.BreakingTool;
                 break;
-            
+
             case ItemType.Chopping_tool:
                 itemTypeDescription = Settings.ChoppingTool;
                 break;
@@ -383,6 +384,24 @@ public class InventoryManager : SingletonMonobehaviour<InventoryManager>, ISavea
         if (itemPosition != -1)
         {
             RemoveItemAtPosition(inventoryList, itemCode, itemPosition);
+        }
+
+        // Send event that inventory has been updated for subscribers to update with
+        EventHandler.CallInventoryUpdatedEvent(inventoryLocation, inventoryLists[(int)inventoryLocation]);
+    }
+
+    /// Remove all items from the selected slot, and create gameObjects with the quantity as the number of items player own at the position they was dropped at
+    public void RemoveItem(InventoryLocation inventoryLocation, int itemCode, int itemQuantity)
+    {
+        List<InventoryItem> inventoryList = inventoryLists[(int)inventoryLocation];
+
+        // Check if the inventory already contains the item (returns -1 if it isn't there!)
+        int itemPosition = FindItemInInventory(inventoryLocation, itemCode);
+
+        // If it does exist, remove the item at that position
+        if (itemPosition != -1)
+        {
+            inventoryList.RemoveAt(itemPosition);
         }
 
         // Send event that inventory has been updated for subscribers to update with
@@ -514,7 +533,7 @@ public class InventoryManager : SingletonMonobehaviour<InventoryManager>, ISavea
                 if (sceneSave.intArrayDictionary != null && sceneSave.intArrayDictionary.TryGetValue("inventoryListCapacityArray", out int[] inventoryCapacityArray))
                 {
                     // Reset the current array of inventory capacities with the saved one
-                    inventoryListCapacityIntArray = inventoryCapacityArray;   
+                    inventoryListCapacityIntArray = inventoryCapacityArray;
                 }
             }
         }
@@ -532,7 +551,7 @@ public class InventoryManager : SingletonMonobehaviour<InventoryManager>, ISavea
     // Required method by the ISaveable interface, which will restore all of the scene data, executed for every item in the iSaveableObjectList. This let's us walk between
     // scenes and keep the stored stuff active with ISaveableRestoreScene 
     public void ISaveableRestoreScene(string sceneName)
-    {   
+    {
         // Nothing to restore here since the InventoryManager is on a persistent scene - it won't get reset ever because we always stay on that scene
     }
 }

@@ -1,4 +1,5 @@
-﻿using TMPro;
+﻿using System;
+using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -181,7 +182,7 @@ public class UIInventorySlot : MonoBehaviour, IBeginDragHandler, IDragHandler, I
                 // Vector to mouse position in the world coordinates, as converted from the screen viewport coordinates 
                 // (the cameras position is at "-10" z position. We want the item to be created at the opposite!)
                 Vector3 worldPosition = mainCamera.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, -mainCamera.transform.position.z));
-                
+
                 // Create the item from prefab at the mouse position (itemPrefab was populated in the editor with the draggedItem Prefab). Subtract half of the grid cell size to get
                 // it at the proper location
                 GameObject itemGameObject = Instantiate(itemPrefab, new Vector3(worldPosition.x, worldPosition.y - Settings.gridCellSize / 2f, worldPosition.z), Quaternion.identity, parentItem);
@@ -199,6 +200,45 @@ public class UIInventorySlot : MonoBehaviour, IBeginDragHandler, IDragHandler, I
                 {
                     ClearSelectedItem();
                 }
+            }
+        }
+    }
+    //Drop all items from selected slot by key combination at the current mouse position
+    public void DropAllSelectedItems()
+    {
+        // Only drop the item if it exists, and if it is selected!
+        if (itemDetails != null && isSelected)
+        {
+            // If we have a valid cursor position, then we can instantiate a new item at the dropped location
+            if (gridCursor.CursorPositionIsValid)
+            {
+                Vector3 worldPosition = mainCamera.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, -mainCamera.transform.position.z));
+
+
+                //Define the radius around the cursor position where items can be dropped
+                float dropRadius = 1.0f;
+                // Create the items from prefab at the mouse position with its value (itemPrefab was populated in the editor with the draggedItem Prefab). Subtract half of the grid cell size to get
+                // them at the proper location
+                for (int i = 0; i < itemQuantity; i++)
+                {
+                    //Generate a random offset within the drop radius
+                    Vector2 randomOffset = UnityEngine.Random.insideUnitCircle * dropRadius;
+                    Vector3 dropPosition = new Vector3(worldPosition.x + randomOffset.x, worldPosition.y - Settings.gridCellSize / 2f, worldPosition.z);
+
+                    //Create the items from prefab at the mouse position with random offset
+                    GameObject itemGameObject = Instantiate(itemPrefab, dropPosition, Quaternion.identity, parentItem);
+                    Item item = itemGameObject.GetComponent<Item>();
+                    item.ItemCode = itemDetails.itemCode;
+                }
+                // Remove all items from the players inventory
+
+                InventoryManager.Instance.RemoveItem(InventoryLocation.player, itemDetails.itemCode, itemQuantity);
+
+                //Play the sound when we drop items
+                AudioManager.Instance.PlaySound(SoundName.effectPluck);
+
+                // Clear the selected highlight
+                ClearSelectedItem();
             }
         }
     }
@@ -228,6 +268,7 @@ public class UIInventorySlot : MonoBehaviour, IBeginDragHandler, IDragHandler, I
     // This will start as the player begins to drag an item
     public void OnBeginDrag(PointerEventData eventData)
     {
+        Console.WriteLine(itemDetails);
         if (itemDetails != null)
         {
             // Disable keyboard input while dragging
@@ -262,7 +303,7 @@ public class UIInventorySlot : MonoBehaviour, IBeginDragHandler, IDragHandler, I
         {
             // Destroy the gameObject as a dragged item
             Destroy(draggedItem);
-        
+
             // If the drag ends over the inventory bar, get the item that was dragged over, and swap them
             if (eventData.pointerCurrentRaycast.gameObject != null && eventData.pointerCurrentRaycast.gameObject.GetComponent<UIInventorySlot>() != null)
             {
@@ -278,13 +319,13 @@ public class UIInventorySlot : MonoBehaviour, IBeginDragHandler, IDragHandler, I
 
                 // Clear the selected item if we've swapped!
                 ClearSelectedItem();
-            } 
+            }
             // else attempt the item if it can be dropped
             else
             {
                 if (itemDetails.canBeDropped)
                 {
-                    DropSelectedItemAtMousePosition();
+                    DropAllSelectedItems();
 
                     AudioManager.Instance.PlaySound(SoundName.effectPluck); // I added this to play a sound when we drop an item
                 }

@@ -79,9 +79,10 @@ public class Player : SingletonMonobehaviour<Player>, ISaveable
     private CharacterAttribute armsCharacterAttribute;
     private CharacterAttribute toolCharacterAttribute;
 
+
     // Bool that restricts the player from moving if it's set to true (i.e. while something else is happening, like an animation
     private bool _playerInputIsDisabled = false;
-    public bool PlayerInputIsDisabled {get => _playerInputIsDisabled; set => _playerInputIsDisabled = value;}
+    public bool PlayerInputIsDisabled { get => _playerInputIsDisabled; set => _playerInputIsDisabled = value; }
 
     // Unique ID required by the ISaveable interface, will store the GUID attached to the player gameObject
     private string _iSaveableUniqueID;
@@ -174,7 +175,7 @@ public class Player : SingletonMonobehaviour<Player>, ISaveable
 
             // Check whether the player is walking (shift) or running
             PlayerWalkInput();
-            
+
             // Player click to drop items
             PlayerClickInput();
 
@@ -183,11 +184,11 @@ public class Player : SingletonMonobehaviour<Player>, ISaveable
 
             // From above two calls, we have xInput, yInput, movementSpeed, and isRunning, isWalking, and isIdle.
             // Now, send event info to delegate so any listeners will recieve player movement input
-            EventHandler.CallMovementEvent(xInput, yInput, isWalking, isRunning, isIdle, isCarrying, toolEffect, 
-                isUsingToolRight, isUsingToolLeft, isUsingToolUp, isUsingToolDown, 
-                isLiftingToolRight, isLiftingToolLeft, isLiftingToolUp, isLiftingToolDown, 
-                isPickingLeft, isPickingRight, isPickingUp, isPickingDown, 
-                isSwingingToolRight, isSwingingToolLeft, isSwingingToolUp, isSwingingToolDown, 
+            EventHandler.CallMovementEvent(xInput, yInput, isWalking, isRunning, isIdle, isCarrying, toolEffect,
+                isUsingToolRight, isUsingToolLeft, isUsingToolUp, isUsingToolDown,
+                isLiftingToolRight, isLiftingToolLeft, isLiftingToolUp, isLiftingToolDown,
+                isPickingLeft, isPickingRight, isPickingUp, isPickingDown,
+                isSwingingToolRight, isSwingingToolLeft, isSwingingToolUp, isSwingingToolDown,
                 false, false, false, false);
         }
 
@@ -197,14 +198,14 @@ public class Player : SingletonMonobehaviour<Player>, ISaveable
 
     // Fixed update is for physics systems
     private void FixedUpdate()
-    {   
+    {
         // Physically move the player!
         PlayerMovement();
     }
 
 
     private void PlayerMovement()
-    {   
+    {
         // Calculate the new position to update each frame (Time.deltaTime is the FixedUpdate cycle time)
         Vector2 move = new Vector2(xInput * movementSpeed * Time.deltaTime, yInput * movementSpeed * Time.deltaTime);
 
@@ -235,7 +236,7 @@ public class Player : SingletonMonobehaviour<Player>, ISaveable
 
 
     private void PlayerMovementInput()
-    {   
+    {
         // These return only -1, 0, 1
         yInput = Input.GetAxisRaw("Vertical");
         xInput = Input.GetAxisRaw("Horizontal");
@@ -308,10 +309,10 @@ public class Player : SingletonMonobehaviour<Player>, ISaveable
         if (!playerToolUseDisabled)
         {
             if (Input.GetMouseButton(0))
-            {   
+            {
                 // Process the input if either the grid cursor is enabled (things like hoeing, watering squares), or the cursor is enabled (like reaping)
                 if (gridCursor.CursorIsEnabled || cursor.CursorIsEnabled)
-                {                 
+                {
                     // Get the cursor grid position
                     Vector3Int cursorGridPosition = gridCursor.GetGridPositionForCursor();
 
@@ -328,7 +329,7 @@ public class Player : SingletonMonobehaviour<Player>, ISaveable
     // Process the players click input - whether it be dropping a seed/colmmodity, using a tool, etc. For tools, we need to calculate the direction we want to use it in for the
     // proper animation
     private void ProcessPlayerClickInput(Vector3Int cursorGridPosition, Vector3Int playerGridPosition)
-    {   
+    {
         // Reset the players movement
         ResetMovement();
 
@@ -345,7 +346,7 @@ public class Player : SingletonMonobehaviour<Player>, ISaveable
         if (itemDetails != null)
         {
             switch (itemDetails.itemType)
-            {   
+            {
                 // If it's a seed, check if it can be dropped, and if the current cursor position is valid. If so, publish an event so subscribers can see it
                 case ItemType.Seed:
                     if (Input.GetMouseButtonDown(0))
@@ -353,7 +354,7 @@ public class Player : SingletonMonobehaviour<Player>, ISaveable
                         ProcessPlayerClickInputSeed(gridPropertyDetails, itemDetails);
                     }
                     break;
-                
+
                 // Same for commodities
                 case ItemType.Commodity:
                     if (Input.GetMouseButtonDown(0))
@@ -423,7 +424,7 @@ public class Player : SingletonMonobehaviour<Player>, ISaveable
         // Check if the cursor is in the box to the right of the player (make sure it's to the right, and also not entirely in the upper/lower boxes)
         if (
             cursorPosition.x > playerPosition.x
-            && 
+            &&
             cursorPosition.y < (playerPosition.y + cursor.ItemUseRadius / 2f)
             &&
             cursorPosition.y > (playerPosition.y - cursor.ItemUseRadius / 2f)
@@ -435,7 +436,7 @@ public class Player : SingletonMonobehaviour<Player>, ISaveable
         // Check if the cursor is in the box to the left of the player (make sure it's to the left, and also not entirely in the upper/lower boxes)
         else if (
             cursorPosition.x < playerPosition.x
-            && 
+            &&
             cursorPosition.y < (playerPosition.y + cursor.ItemUseRadius / 2f)
             &&
             cursorPosition.y > (playerPosition.y - cursor.ItemUseRadius / 2f)
@@ -468,10 +469,10 @@ public class Player : SingletonMonobehaviour<Player>, ISaveable
         {
             // This method will plant the seed at that gridCursor location
             PlantSeedAtCursor(gridPropertyDetails, itemDetails);
-        } 
+        }
         // Otherwise, just publish the CallDropSelectedItemEvent, to drop the item on the ground
         else if (itemDetails.canBeDropped && gridCursor.CursorPositionIsValid && gridPropertyDetails.seedItemCode == -1) // I added this to become invalid if there is already a seed planted there
-        {    
+        {
             // If it's a valid drop, publish this event so subscribers can see it. UIInventorySlot.DropSelectedItemAtMousePosition will subscribe to this, and drop the item
             EventHandler.CallDropSelectedItemEvent();
         }
@@ -483,7 +484,7 @@ public class Player : SingletonMonobehaviour<Player>, ISaveable
     {
         // Only process the planting sequence if we have a cropDetails for the seed set up in the so_CropDetailsList!
         if (GridPropertiesManager.Instance.GetCropDetails(itemDetails.itemCode) != null)
-        {        
+        {
             // Update the gridPropertyDetails with the seed item code, and set the number of days growth to 0
             gridPropertyDetails.seedItemCode = itemDetails.itemCode;
             gridPropertyDetails.growthDays = 0;
@@ -504,7 +505,7 @@ public class Player : SingletonMonobehaviour<Player>, ISaveable
     private void ProcessPlayerClickInputCommodity(GridPropertyDetails gridPropertyDetails, ItemDetails itemDetails)
     {
         if (itemDetails.canBeDropped && gridCursor.CursorPositionIsValid && gridPropertyDetails.seedItemCode == -1) // I added this to become invalid if there is already a seed planted there
-        {   
+        {
             // If it's a valid drop, publish this event so subscribers can see it. UIInventorySlot.DropSelectedItemAtMousePosition will subscribe to this, and drop the item
             EventHandler.CallDropSelectedItemEvent();
         }
@@ -571,7 +572,7 @@ public class Player : SingletonMonobehaviour<Player>, ISaveable
                     ReapInPlayerDirectionAtCursor(itemDetails, playerDirection);
                 }
                 break;
-            
+
             default:
                 break;
         }
@@ -742,7 +743,7 @@ public class Player : SingletonMonobehaviour<Player>, ISaveable
     // This coroutine initiates the chopping animation, and checks for fully grown trees, harvests the tree (or wobbles it if
     // not enough harvests yet), and spawns the harvest resources
     private IEnumerator ChopInPlayerDirectionRoutine(GridPropertyDetails gridPropertyDetails, ItemDetails equippedItemDetails, Vector3Int playerDirection)
-    {  
+    {
         // Disable player input and tool use so we can't walk away or use a tool again during the animation
         PlayerInputIsDisabled = true;
         playerToolUseDisabled = true;
@@ -758,7 +759,7 @@ public class Player : SingletonMonobehaviour<Player>, ISaveable
         // This method will take in the gridPropertyDetails you want to harvest, and the equipped item details you want
         // to harvest with, and properly processes what happens (like how to harvest it - number of actions, animations, etc)
         ProcessCropWithEquippedItemInPlayerDirection(playerDirection, equippedItemDetails, gridPropertyDetails);
-        
+
         // Pause to allow the pick animation to complete
         yield return useToolAnimationPause;
 
@@ -785,7 +786,7 @@ public class Player : SingletonMonobehaviour<Player>, ISaveable
 
     // This coroutine initiates the picking animation, and checks for fully grown crops, destroys the crop, and adds it to your inventory
     private IEnumerator CollectInPlayerDirectionRoutine(GridPropertyDetails gridPropertyDetails, ItemDetails equippedItemDetails, Vector3Int playerDirection)
-    {  
+    {
         // Disable player input and tool use so we can't walk away or use a tool again during the animation
         PlayerInputIsDisabled = true;
         playerToolUseDisabled = true;
@@ -793,7 +794,7 @@ public class Player : SingletonMonobehaviour<Player>, ISaveable
         // This method will take in the gridPropertyDetails you want to harvest, and the equipped item details you want
         // to harvest with, and properly processes what happens (like how to harvest it)
         ProcessCropWithEquippedItemInPlayerDirection(playerDirection, equippedItemDetails, gridPropertyDetails);
-        
+
         // Pause to allow the pick animation to complete
         yield return pickAnimationPause;
 
@@ -821,7 +822,7 @@ public class Player : SingletonMonobehaviour<Player>, ISaveable
     // This coroutine initiates the breaking animation, and checks for breakable stone, harvests the stone (or wobbles it if
     // not enough harvests yet), and spawns the harvest resources
     private IEnumerator BreakInPlayerDirectionRoutine(GridPropertyDetails gridPropertyDetails, ItemDetails equippedItemDetails, Vector3Int playerDirection)
-    {  
+    {
         // Disable player input and tool use so we can't walk away or use a tool again during the animation
         PlayerInputIsDisabled = true;
         playerToolUseDisabled = true;
@@ -837,7 +838,7 @@ public class Player : SingletonMonobehaviour<Player>, ISaveable
         // This method will take in the gridPropertyDetails you want to harvest, and the equipped item details you want
         // to harvest with, and properly processes what happens (like how to harvest it - number of actions, animations, etc)
         ProcessCropWithEquippedItemInPlayerDirection(playerDirection, equippedItemDetails, gridPropertyDetails);
-        
+
         // Pause to allow the pick animation to complete
         yield return useToolAnimationPause;
 
@@ -860,7 +861,7 @@ public class Player : SingletonMonobehaviour<Player>, ISaveable
 
     // This coroutine initiates the reaping animation, and checks for reapable scenary in the way, and destroys the objects
     private IEnumerator ReapInPlayerDirectionAtCursorRoutine(ItemDetails itemDetails, Vector3Int playerDirection)
-    {   
+    {
         // Disable player input and tool use so we can't walk away or use a tool again during the animation
         PlayerInputIsDisabled = true;
         playerToolUseDisabled = true;
@@ -893,10 +894,10 @@ public class Player : SingletonMonobehaviour<Player>, ISaveable
     private void UseToolInPlayerDirection(ItemDetails equippedItemDetails, Vector3Int playerDirection)
     {
         if (Input.GetMouseButton(0))
-        {   
+        {
             // Check for which tool is being used for this animation. For now, we have only added the scythe
             switch (equippedItemDetails.itemType)
-            {   
+            {
                 // If the tool is the scythe, find the playerFacingDirection and set up the correct animation triggers for the scythe direction, which will be picked up 
                 // with Update method, and the animation override set up previously
                 case ItemType.Reaping_tool:
@@ -925,7 +926,7 @@ public class Player : SingletonMonobehaviour<Player>, ISaveable
             // Define the center point of the square which will be used for collision testing, in the proper playerFacingDirection
             // Here we are adding a multiple of playerDirection (a unit vector in the up, down, left, right directions), which will give you
             // (-1, 0, 1), then multiplied by half of the item use radius, to get the center of the box in the direction the player is facing
-            Vector2 point = new Vector2(GetPlayerCenterPosition().x + (playerDirection.x * (equippedItemDetails.itemUseRadius / 2f)), 
+            Vector2 point = new Vector2(GetPlayerCenterPosition().x + (playerDirection.x * (equippedItemDetails.itemUseRadius / 2f)),
                                             GetPlayerCenterPosition().y + (playerDirection.y * (equippedItemDetails.itemUseRadius / 2f)));
 
             // Define the size of the square (itemUseRadius for the tool in both dimensions) that will be used for collision testing
@@ -977,7 +978,7 @@ public class Player : SingletonMonobehaviour<Player>, ISaveable
     /// Method to process the crop with the equipped item, and the players direction
     /// </summary>
     private void ProcessCropWithEquippedItemInPlayerDirection(Vector3Int playerDirection, ItemDetails equippedItemDetails, GridPropertyDetails gridPropertyDetails)
-    {   
+    {
         // Check which tool is being used to harvest the crop (basket, hoe, axe, pickaxe, ...)
         switch (equippedItemDetails.itemType)
         {
@@ -1004,7 +1005,7 @@ public class Player : SingletonMonobehaviour<Player>, ISaveable
                     isUsingToolDown = true;
                 }
                 break;
-                
+
             case ItemType.Collecting_tool:
                 // Set the proper isPickingDirection bool for the player animation parameter.
                 // Now that the overrides are active, these will be picked up in the update loop (movement event publisher!) 
@@ -1093,6 +1094,7 @@ public class Player : SingletonMonobehaviour<Player>, ISaveable
             }
         }
 
+
         // Test object pool!
         // if (Input.GetMouseButtonDown(1))
         // {
@@ -1121,11 +1123,11 @@ public class Player : SingletonMonobehaviour<Player>, ISaveable
         ResetMovement();
 
         // Send event to any listeners for movement input, with reset, stationary values 
-        EventHandler.CallMovementEvent(xInput, yInput, isWalking, isRunning, isIdle, isCarrying, toolEffect, 
-            isUsingToolRight, isUsingToolLeft, isUsingToolUp, isUsingToolDown, 
-            isLiftingToolRight, isLiftingToolLeft, isLiftingToolUp, isLiftingToolDown, 
-            isPickingLeft, isPickingRight, isPickingUp, isPickingDown, 
-            isSwingingToolRight, isSwingingToolLeft, isSwingingToolUp, isSwingingToolDown, 
+        EventHandler.CallMovementEvent(xInput, yInput, isWalking, isRunning, isIdle, isCarrying, toolEffect,
+            isUsingToolRight, isUsingToolLeft, isUsingToolUp, isUsingToolDown,
+            isLiftingToolRight, isLiftingToolLeft, isLiftingToolUp, isLiftingToolDown,
+            isPickingLeft, isPickingRight, isPickingUp, isPickingDown,
+            isSwingingToolRight, isSwingingToolLeft, isSwingingToolUp, isSwingingToolDown,
             false, false, false, false);
     }
 
@@ -1157,7 +1159,7 @@ public class Player : SingletonMonobehaviour<Player>, ISaveable
 
         // This method builds an animation ovveride list, and applies it to the arms animator. Now the type is none so nothing will be overriden!
         animationOverrides.ApplyCharacterCustomizationParameters(characterAttributeCustomisationList);
-        
+
         // Set the flag so the player is not carrying the item
         isCarrying = false;
     }
@@ -1183,7 +1185,7 @@ public class Player : SingletonMonobehaviour<Player>, ISaveable
 
             // This method builds an animation ovveride list, and applies it to the arms animator
             animationOverrides.ApplyCharacterCustomizationParameters(characterAttributeCustomisationList);
-            
+
             // Set the flag so the player is carrying the item
             isCarrying = true;
         }
@@ -1320,7 +1322,7 @@ public class Player : SingletonMonobehaviour<Player>, ISaveable
     // Required method by the ISaveable interface, which will restore all of the scene data, executed for every item in the iSaveableObjectList. This let's us walk between
     // scenes and keep the stored stuff active with ISaveableRestoreScene 
     public void ISaveableRestoreScene(string sceneName)
-    {   
+    {
         // Nothing to restore here since the player is on a persistent scene - it won't get reset ever because we always stay on that scene
     }
 
@@ -1333,35 +1335,35 @@ public class Player : SingletonMonobehaviour<Player>, ISaveable
         {
             case Direction.up:
                 // Set the idle up trigger, and call the movement event so the animation will be reset to idle up, with everything else false, and no movement
-                EventHandler.CallMovementEvent(0f, 0f, false, false, false, false, ToolEffect.none, false, false, false, false, false, false, false, false, 
+                EventHandler.CallMovementEvent(0f, 0f, false, false, false, false, ToolEffect.none, false, false, false, false, false, false, false, false,
                                                false, false, false, false, false, false, false, false, true, false, false, false);
 
                 break;
 
             case Direction.down:
                 // Set the idle down trigger, and call the movement event so the animation will be reset to idle down, with everything else false, and no movement
-                EventHandler.CallMovementEvent(0f, 0f, false, false, false, false, ToolEffect.none, false, false, false, false, false, false, false, false, 
+                EventHandler.CallMovementEvent(0f, 0f, false, false, false, false, ToolEffect.none, false, false, false, false, false, false, false, false,
                                                false, false, false, false, false, false, false, false, false, true, false, false);
 
                 break;
 
             case Direction.left:
                 // Set the idle left trigger, and call the movement event so the animation will be reset to idle left, with everything else false, and no movement
-                EventHandler.CallMovementEvent(0f, 0f, false, false, false, false, ToolEffect.none, false, false, false, false, false, false, false, false, 
+                EventHandler.CallMovementEvent(0f, 0f, false, false, false, false, ToolEffect.none, false, false, false, false, false, false, false, false,
                                                false, false, false, false, false, false, false, false, false, false, true, false);
 
                 break;
 
             case Direction.right:
                 // Set the idle right trigger, and call the movement event so the animation will be reset to idle right, with everything else false, and no movement
-                EventHandler.CallMovementEvent(0f, 0f, false, false, false, false, ToolEffect.none, false, false, false, false, false, false, false, false, 
+                EventHandler.CallMovementEvent(0f, 0f, false, false, false, false, ToolEffect.none, false, false, false, false, false, false, false, false,
                                                false, false, false, false, false, false, false, false, false, false, false, true);
 
                 break;
 
             default:
                 // If none of the above are triggered, just set it to idle down!
-                EventHandler.CallMovementEvent(0f, 0f, false, false, false, false, ToolEffect.none, false, false, false, false, false, false, false, false, 
+                EventHandler.CallMovementEvent(0f, 0f, false, false, false, false, ToolEffect.none, false, false, false, false, false, false, false, false,
                                                false, false, false, false, false, false, false, false, false, true, false, false);
 
                 break;

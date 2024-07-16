@@ -56,7 +56,7 @@ MonoBehaviour:
     minute: 0
     priority: 1
     day: 5
-    weather: 1
+    weather: 0
     season: 4
     toSceneName: 0
     toGridCoordinate:

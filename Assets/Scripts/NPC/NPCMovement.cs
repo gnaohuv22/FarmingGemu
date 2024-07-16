@@ -28,9 +28,9 @@ public class NPCMovement : MonoBehaviour
 
     // The normal speed, minimum speed, and maximum speed of our NPC, to be populated in the editor
     [Header("NPC Movement")]
-    public float npcNormalSpeed = 2f;
+    public float npcNormalSpeed = 3f;
     [SerializeField] private float npcMinSpeed = 1f;
-    [SerializeField] private float npcMaxSpeed = 3f;
+    [SerializeField] private float npcMaxSpeed = 4f;
 
     // Toggles on when the NPC is moving (e.g. so other things won't happen to the NPC)
     private bool npcIsMoving = false;
@@ -39,7 +39,7 @@ public class NPCMovement : MonoBehaviour
     [HideInInspector] public AnimationClip npcTargetAnimationClip;
 
     [Header("NPC Animation")]
-    
+
     // The blank animation the NPC will play if nothing is supplied for when they get there
     [SerializeField] private AnimationClip blankAnimation = null;
 
@@ -124,7 +124,7 @@ public class NPCMovement : MonoBehaviour
                 // The current position is where the NPC currently is, and initially we will set the next grid position to the current one
                 npcCurrentGridPosition = GetGridPosition(transform.position);
                 npcNextGridPosition = npcCurrentGridPosition;
-                
+
                 // Only run if there are still NPCMovementSteps in the NPCMovementStepStack
                 if (npcPath.npcMovementStepStack.Count > 0)
                 {

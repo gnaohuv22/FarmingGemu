@@ -14,7 +14,7 @@ public class UIInventoryBar : MonoBehaviour
 
     private bool _isInventoryBarPositionBottom = true;
 
-    public bool IsInventoryBarPositionBottom {get => _isInventoryBarPositionBottom; set => _isInventoryBarPositionBottom = value;}
+    public bool IsInventoryBarPositionBottom { get => _isInventoryBarPositionBottom; set => _isInventoryBarPositionBottom = value; }
 
 
     private void Awake()
